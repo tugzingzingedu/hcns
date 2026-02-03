@@ -1,17 +1,8 @@
-$target = "10.4.6.252"
-$user   = "hcnsstaff"
-$pass   = "Admin@123"
-$share  = "\\10.4.6.252\HR"
-$drive  = "H"
+cmdkey /delete:10.4.6.252
+cmdkey /add:10.4.6.252 /user:hcnsstaff /pass:Admin@123
 
-if (cmdkey /list | Select-String $target) {
-    cmdkey /delete:$target
-}
+Start-Process explorer "\\10.4.6.252\HR"
 
-if (Get-PSDrive -Name $drive -ErrorAction SilentlyContinue) {
-    Remove-PSDrive -Name $drive -Force
-}
+net use H: "\\10.4.6.252\HR" /persistent:yes
 
-cmdkey /add:$target /user:$user /pass:$pass
-New-PSDrive -Name $drive -PSProvider FileSystem -Root $share -Persist
-Start-Process explorer "$drive:\"
+Start-Process explorer "\\10.4.6.252\HR"
