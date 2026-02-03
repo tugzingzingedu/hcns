@@ -5,15 +5,18 @@ $drive  = "H"
 # =========================
 # XOÁ CREDENTIAL CŨ (NẾU CÓ)
 # =========================
-if (cmdkey /list | Select-String $target) {
-    cmdkey /delete:$target
-}
+cmdkey /delete:$target 2>$null
 
 # =========================
-# XOÁ Ổ MẠNG ĐÃ MAP (NẾU CÓ)
+# XOÁ Ổ MẠNG CŨ (NET USE)
+# =========================
+net use "$drive:" /delete /yes 2>$null
+
+# =========================
+# XOÁ Ổ PSDrive (NẾU CÓ)
 # =========================
 if (Get-PSDrive -Name $drive -ErrorAction SilentlyContinue) {
-    net use "$drive:" /delete /yes
+    Remove-PSDrive -Name $drive -Force
 }
 
 # =========================
@@ -22,16 +25,11 @@ if (Get-PSDrive -Name $drive -ErrorAction SilentlyContinue) {
 cmdkey /add:$target /user:hcnsstaff /pass:Admin@123
 
 # =========================
-# MỞ SHARE
-# =========================
-Start-Process explorer $share
-
-# =========================
 # MAP Ổ MẠNG
 # =========================
 net use "$drive:" $share /persistent:yes
 
 # =========================
-# MỞ LẠI SHARE
+# MỞ THƯ MỤC
 # =========================
-Start-Process explorer $share
+Start-Process explorer "$drive:\"
